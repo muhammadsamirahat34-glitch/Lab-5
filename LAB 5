@@ -1,0 +1,54 @@
+#include<iostream>
+#include<vector>
+#include<algorithm>
+#include<climits>
+using namespace std;
+
+int coinchange(int totalCoins, vector<int>& denominations, int target)
+{
+    vector<vector<int>> ways(totalCoins + 1, vector<int>(target + 1, 0));
+    
+    for(int i = 0; i <= totalCoins; i++)
+    {
+        ways[i][0] = 1;
+    }
+    
+    for(int i = 1; i <= totalCoins; i++)
+    {
+        for(int j = 1; j <= target; j++)
+        {
+            if(j >= denominations[i-1])
+            {
+                ways[i][j] = ways[i-1][j] + ways[i][j - denominations[i-1]];
+            }
+            else
+            {
+                ways[i][j] = ways[i-1][j];
+            }
+        }
+    }
+    return ways[totalCoins][target];
+}
+
+int main()
+{
+    int totalCoins;
+    cout << "Enter the number of coins: ";
+    cin >> totalCoins;
+    
+    cout << "Enter the value of coins: ";
+    vector<int> denominations(totalCoins);
+    for(int i = 0; i < totalCoins; i++)
+    {
+        cin >> denominations[i];
+    }
+    
+    int target;
+    cout << "Enter the amount to exchange: ";
+    cin >> target;
+    
+    int result = coinchange(totalCoins, denominations, target);
+    cout << "Maximum combinations to exchange the coins is: " << result << endl;
+    
+    return 0;
+}
